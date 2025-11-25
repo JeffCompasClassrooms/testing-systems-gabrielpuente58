@@ -304,6 +304,27 @@ def describe_POST_squirrels_create():
         assert response.status_code == 200
         data = response.json()
         assert data["name"] == "Retrievable"
+    
+    def it_rejects_squirrel_with_empty_size(reset_database):
+        """Should not allow creating squirrel with empty size"""
+        server_url = reset_database
+        response = requests.post(f"{server_url}/squirrels", data={"name": "TestSquirrel", "size": ""})
+        
+        assert response.status_code == 400
+    
+    def it_rejects_squirrel_with_missing_size(reset_database):
+        """Should return 400 when size field is missing"""
+        server_url = reset_database
+        response = requests.post(f"{server_url}/squirrels", data={"name": "TestSquirrel"})
+        
+        assert response.status_code == 400
+    
+    def it_rejects_squirrel_with_missing_name(reset_database):
+        """Should return 400 when name field is missing"""
+        server_url = reset_database
+        response = requests.post(f"{server_url}/squirrels", data={"size": "medium"})
+        
+        assert response.status_code == 400
 
 
 def describe_PUT_squirrels_update():
